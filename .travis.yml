@@ -264,7 +264,7 @@ matrix:
             - gcc
             - wget 
             - gperf
-            - python
+            - python2.7
             - python-pip 
             - python-setuptools 
             - python-serial 
