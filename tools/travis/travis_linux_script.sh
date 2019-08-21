@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ "$ARCH" != "freertoslwip" ]; then
+if [ "$ARCH" = "freertoslwip" ]; then
     echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
     cd $IDF_PATH/examples/opcua-esp32
     cp /home/travis/build/cmbahadir/open62541/build/open62541.c components/open62541lib

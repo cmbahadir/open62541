@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ "$ARCH" != "freertoslwip" ]; then
+if [ "$ARCH" = "freertoslwip" ]; then
     echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
     mkdir -p build && cd build
     cmake \

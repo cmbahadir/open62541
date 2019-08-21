@@ -257,10 +257,11 @@ matrix:
   #
   # FREERTOS - gcc-5.4 build
     - os: linux
-      compiler: gcc-4.9
+      compiler: gcc-5.4
       addons:
         apt:
           packages:
+            - gcc
             - wget 
             - make 
             - libncurses-dev 
