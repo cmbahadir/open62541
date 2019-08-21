@@ -263,10 +263,6 @@ matrix:
           packages:
             - gcc
             - wget 
-            - make 
-            - libncurses-dev 
-            - flex 
-            - bison 
             - gperf 
             - python3-pip 
             - python3-setuptools 
