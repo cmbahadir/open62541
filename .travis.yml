@@ -255,9 +255,9 @@ matrix:
         directories:
           - '$HOME/.sonar/cache'
   #
-  # FREERTOS - gcc-5.4 build
+  # FREERTOS - gcc build
     - os: linux
-      compiler: gcc-5.4
+      compiler: gcc
       addons:
         apt:
           packages:
