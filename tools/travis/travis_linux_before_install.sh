@@ -17,11 +17,10 @@ if [ "$ARCH" = "freertoslwip" ]; then
 	git clone --recursive https://github.com/espressif/esp-idf.git esp-idf
 	cd esp-idf && git checkout tags/v3.2
 	git submodule update --init && cd ..
-	export IDF_PATH=/home/travis/build/cmbahadir/esp-idf
 	python -m pip install --user -r $IDF_PATH/requirements.txt
 	mkdir esp && cd esp
 	wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz
-	export PATH="/home/travis/build/cmbahadir/esp/xtensa-esp32-elf/bin:$PATH" && cd .. 
+	cd .. 
 	git clone https://github.com/cmbahadir/opcua-esp32.git opcua-esp32
 	mv opcua-esp32 $IDF_PATH/examples
     echo -en 'travis_fold:end:script.build.multithread\\r'

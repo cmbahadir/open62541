@@ -3,6 +3,8 @@ set -e
 
 if [ "$ARCH" = "freertoslwip" ]; then
     echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
+    export PATH="/home/travis/build/cmbahadir/esp/xtensa-esp32-elf/bin:$PATH"
+    export IDF_PATH=/home/travis/build/cmbahadir/esp-idf
     cd $IDF_PATH/examples/opcua-esp32
     cp /home/travis/build/cmbahadir/open62541/build/open62541.c components/open62541lib
     sed -i '/#define UA_IPV6 LWIP_IPV6/d' /home/travis/build/cmbahadir/open62541/build/open62541.h
