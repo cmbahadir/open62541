@@ -1,6 +1,32 @@
 #!/bin/bash
 set -e
 
+if [ "$ARCH" != "freertoslwip" ]; then
+    echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
+    mkdir -p build && cd build
+    cmake \
+    -DUA_ARCHITECTURE:STRING=freertosLWIP \
+    -DUA_ENABLE_PUBSUB:BOOL=OFF \
+    -DUA_ENABLE_METHODCALLS:BOOL=ON \
+    -DUA_ENABLE_NODEMANAGEMENT:BOOL=ON \
+    -DUA_ENABLE_AMALGAMATION:STRING=ON \
+    -DUA_ENABLE_PUBSUB:BOOL=ON \
+    -DUA_LOGLEVEL:STRING=600 ..
+    make -j || true
+	cd ../..
+	git clone --recursive https://github.com/espressif/esp-idf.git esp-idf
+	cd esp-idf && git checkout tags/v3.2
+	git submodule update --init && cd ..
+	export IDF_PATH=/home/travis/build/cmbahadir/esp-idf
+	python -m pip install --user -r $IDF_PATH/requirements.txt
+	mkdir esp && cd esp
+	wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz
+	export PATH="/home/travis/build/cmbahadir/esp/xtensa-esp32-elf/bin:$PATH" && cd .. 
+	git clone https://github.com/cmbahadir/opcua-esp32.git opcua-esp32
+	mv opcua-esp32 $IDF_PATH/examples
+    echo -en 'travis_fold:end:script.build.multithread\\r'
+fi
+
 if [ -z ${LOCAL_PKG+x} ] || [ -z "$LOCAL_PKG" ]; then
     echo "LOCAL_PKG is not set. Aborting..."
     exit 1
