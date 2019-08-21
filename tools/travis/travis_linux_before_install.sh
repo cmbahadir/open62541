@@ -18,7 +18,7 @@ if [ "$ARCH" = "freertoslwip" ]; then
 	cd esp-idf && git checkout tags/v3.2
 	git submodule update --init && cd ..
 	export IDF_PATH=/home/travis/build/cmbahadir/esp-idf
-	python3 -m pip install --user -r $IDF_PATH/requirements.txt
+	pip3 install --user -r $IDF_PATH/requirements.txt
 	mkdir esp && cd esp
 	wget https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-80-g6c4433a-5.2.0.tar.gz
 	cd .. 

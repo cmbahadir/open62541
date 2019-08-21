@@ -268,11 +268,11 @@ matrix:
             - flex 
             - bison 
             - gperf 
-            - python 
-            - python-pip 
-            - python-setuptools 
-            - python-serial 
-            - python-pyparsing
+            - python3 
+            - python3-pip 
+            - python3-setuptools 
+            - python3-serial 
+            - python3-pyparsing
       env:
         - ARCH=freertoslwip
           
