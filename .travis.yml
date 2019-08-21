@@ -275,7 +275,6 @@ matrix:
             - python-pyparsing
       env:
         - ARCH=freertoslwip
-        - PYTHON=python3
           
   allow_failures:
     #
