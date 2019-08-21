@@ -37,7 +37,7 @@ if ! [ -z ${CLANG_FORMAT+x} ]; then
     exit 0
 fi
 
-if [ -z ${DOCKER+x} ] && [ -z ${SONAR+x} ] &&  [-z ${ARCH+x} ]; then
+if [ -z ${DOCKER+x} ] && [ -z ${SONAR+x} ] &&  [ -z ${ARCH} ]; then
 	# Only on non-docker builds required
 
  	echo "=== Installing from external package sources in $LOCAL_PKG ===" && echo -en 'travis_fold:start:before_install.external\\r'
