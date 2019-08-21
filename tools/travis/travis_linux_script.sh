@@ -2,7 +2,7 @@
 set -e
 
 if [ "$ARCH" = "freertoslwip" ]; then
-    echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.multithread\\r'
+    echo -e "\r\n==Compile multithreaded version==" && echo -en 'travis_fold:start:script.build.freertoslwip\\r'
     export PATH="/home/travis/build/cmbahadir/esp/xtensa-esp32-elf/bin:$PATH"
     export IDF_PATH=/home/travis/build/cmbahadir/esp-idf
     cd $IDF_PATH/examples/opcua-esp32
@@ -13,7 +13,8 @@ if [ "$ARCH" = "freertoslwip" ]; then
     cp -r $IDF_PATH/components/tcpip_adapter components/ && cp -r $IDF_PATH/components/lwip components/ && cp -r $IDF_PATH/components/freertos components/ 
     cp components/freertos/include/freertos/* components/freertos/include
     make
-    echo -en 'travis_fold:end:script.build.multithread\\r'
+    echo -en 'travis_fold:end:script.build.freertoslwip\\r'
+    exit 0
 fi
 
 # Sonar code quality

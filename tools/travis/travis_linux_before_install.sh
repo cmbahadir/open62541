@@ -12,6 +12,7 @@ if [ "$ARCH" = "freertoslwip" ]; then
     -DUA_ENABLE_AMALGAMATION:STRING=ON \
     -DUA_ENABLE_PUBSUB:BOOL=ON \
     -DUA_LOGLEVEL:STRING=600 ..
+	# Return true in any case check issue #2887
     make -j || true
 	cd ../..
 	git clone --recursive https://github.com/espressif/esp-idf.git esp-idf
@@ -26,6 +27,7 @@ if [ "$ARCH" = "freertoslwip" ]; then
 	git clone https://github.com/cmbahadir/opcua-esp32.git opcua-esp32
 	mv opcua-esp32 $IDF_PATH/examples
     echo -en 'travis_fold:end:script.build.multithread\\r'
+	exit 0
 fi
 
 if [ -z ${LOCAL_PKG+x} ] || [ -z "$LOCAL_PKG" ]; then
