@@ -263,14 +263,14 @@ matrix:
           packages:
             - gcc
             - wget 
-            - gperf 
-            - python3-pip 
-            - python3-setuptools 
-            - python3-serial 
-            - python3-pyparsing
+            - gperf
+            - python
+            - python-pip 
+            - python-setuptools 
+            - python-serial 
+            - python-pyparsing
       env:
         - ARCH=freertoslwip
-        - PYTHON=python3
           
   allow_failures:
     #
