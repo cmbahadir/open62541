@@ -39,14 +39,6 @@ UA_TcpErrorMessage errMsg;
 static funcs_called fCalled;
 static key_sizes keySizes;
 
-static void setup_sendError(void){
-    UA_TcpErrorMessage_init(&errMsg);
-}
-
-static void teardown_sendError(void){
-    memset(&errMsg, 0, sizeof(UA_TcpErrorMessage));
-}
-
 static void
 setup_secureChannel(void) {
     TestingPolicy(&dummyPolicy, dummyCertificate, &fCalled, &keySizes);
@@ -58,6 +50,8 @@ setup_secureChannel(void) {
     testChannel.connection = &testingConnection;
 
     testChannel.state = UA_SECURECHANNELSTATE_OPEN;
+
+    UA_TcpErrorMessage_init(&errMsg);
 }
 
 static void
@@ -65,6 +59,8 @@ teardown_secureChannel(void) {
     UA_SecureChannel_close(&testChannel);
     dummyPolicy.clear(&dummyPolicy);
     testingConnection.close(&testingConnection);
+
+    UA_TcpErrorMessage_clear(&errMsg);
 }
 
 static void
@@ -172,13 +168,9 @@ START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeInvalid) {
 }
 END_TEST
 
-START_TEST(SecureChannel_sendError_BADSECURITYMODEREJECTED) {
+START_TEST(SecureChannel_sendError) {
     errMsg.error = UA_STATUSCODE_BADSECURITYMODEREJECTED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
-}
-END_TEST
-
-START_TEST(SecureChannel_sendError_BADCERTIFICATEREVOKED){
     errMsg.error = UA_STATUSCODE_BADCERTIFICATEREVOKED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
 }
@@ -593,11 +585,6 @@ testSuite_SecureChannel(void) {
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_invalidParameters);
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeNone);
 
-    TCase *tc_sendError = tcase_create("Test sendError function");
-    tcase_add_checked_fixture(tc_sendError, setup_sendError, teardown_sendError);
-    tcase_add_test(tc_sendError, SecureChannel_sendError_BADSECURITYMODEREJECTED);
-    tcase_add_test(tc_sendError, SecureChannel_sendError_BADCERTIFICATEREVOKED);
-
 #ifdef UA_ENABLE_ENCRYPTION
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeSign);
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeSignAndEncrypt);
@@ -610,6 +597,11 @@ testSuite_SecureChannel(void) {
     tcase_add_checked_fixture(tc_processBuffer, setup_secureChannel, teardown_secureChannel);
     tcase_add_test(tc_processBuffer, SecureChannel_assemblePartialChunks);
     suite_add_tcase(s, tc_processBuffer);
+
+    TCase *tc_sendError = tcase_create("Test sendError function");
+    tcase_add_checked_fixture(tc_sendError, setup_secureChannel, teardown_secureChannel);
+    tcase_add_test(tc_sendError, SecureChannel_sendError);
+    suite_add_tcase(s, tc_sendError);
 
     return s;
 }
