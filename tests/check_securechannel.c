@@ -164,13 +164,21 @@ START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeInvalid) {
 }
 END_TEST
 
-// START_TEST(SecureChannel_sendError) {
-//     UA_TcpErrorMessage errMsg;
-//     UA_TcpErrorMessage_init(&errMsg);
-//     errMsg.error = UA_STATUSCODE_BADSECURITYMODEREJECTED;
-//     UA_Connection_sendError(testChannel.connection, &errMsg);
-// }
-// END_TEST
+START_TEST(SecureChannel_sendError_BADSECURITYMODEREJECTED) {
+    UA_TcpErrorMessage errMsg;
+    UA_TcpErrorMessage_init(&errMsg);
+    errMsg.error = UA_STATUSCODE_BADSECURITYMODEREJECTED;
+    UA_Connection_sendError(testChannel.connection, &errMsg);
+}
+END_TEST
+
+START_TEST(SecureChannel_sendError_BADCERTIFICATEREVOKED){
+    UA_TcpErrorMessage errMsg;
+    UA_TcpErrorMessage_init(&errMsg);
+    errMsg.error = UA_STATUSCODE_BADCERTIFICATEREVOKED;
+    UA_Connection_sendError(testChannel.connection, &errMsg);
+}
+END_TEST
 
 START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeNone) {
     // Configure our channel correctly for OPN messages and setup dummy message
@@ -581,8 +589,9 @@ testSuite_SecureChannel(void) {
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_invalidParameters);
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeNone);
 
-    // TCase *tc_sendError = tcase_create("Test sendError function");
-    // tcase_add_test(tc_sendError, SecureChannel_sendError);
+    TCase *tc_sendError = tcase_create("Test sendError function");
+    tcase_add_test(tc_sendError, SecureChannel_sendError_BADSECURITYMODEREJECTED);
+    tcase_add_test(tc_sendError, SecureChannel_sendError_BADCERTIFICATEREVOKED);
 
 #ifdef UA_ENABLE_ENCRYPTION
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeSign);
