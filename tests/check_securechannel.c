@@ -34,6 +34,10 @@ UA_ByteString dummyCertificate =
 UA_SecurityPolicy dummyPolicy;
 UA_Connection testingConnection;
 UA_ByteString sentData;
+
+//sendError globals
+UA_Connection brokenConnection;
+UA_ByteString brokenData;
 UA_TcpErrorMessage errMsg;
 
 static funcs_called fCalled;
@@ -168,13 +172,22 @@ START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeInvalid) {
 }
 END_TEST
 
-START_TEST(SecureChannel_sendError) {
+START_TEST(SecureChannel_sendError_BADCERTIFICATEUNTRUSTRED) {
     errMsg.error = UA_STATUSCODE_BADSECURITYMODEREJECTED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
+}END_TEST
+
+START_TEST(SecureChannel_sendError_BADCERTIFICATEREVOKED){
     errMsg.error = UA_STATUSCODE_BADCERTIFICATEREVOKED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
-}
-END_TEST
+}END_TEST
+
+START_TEST(SecureChannel_sendError_LargerThanSendBuffer){
+    errMsg.error = UA_STATUSCODE_GOOD;
+    brokenConnection = createDummyConnection(0, &brokenData);
+    //Expected to return due to "BADCOMMUNICATIONERROR"
+    UA_Connection_sendError(&brokenConnection, &errMsg);
+}END_TEST
 
 START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeNone) {
     // Configure our channel correctly for OPN messages and setup dummy message
@@ -600,7 +613,9 @@ testSuite_SecureChannel(void) {
 
     TCase *tc_sendError = tcase_create("Test sendError function");
     tcase_add_checked_fixture(tc_sendError, setup_secureChannel, teardown_secureChannel);
-    tcase_add_test(tc_sendError, SecureChannel_sendError);
+    tcase_add_test(tc_sendError, SecureChannel_sendError_BADCERTIFICATEUNTRUSTRED);
+    tcase_add_test(tc_sendError, SecureChannel_sendError_BADCERTIFICATEREVOKED);
+    tcase_add_test(tc_sendError, SecureChannel_sendError_LargerThanSendBuffer);
     suite_add_tcase(s, tc_sendError);
 
     return s;
