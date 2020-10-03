@@ -34,10 +34,18 @@ UA_ByteString dummyCertificate =
 UA_SecurityPolicy dummyPolicy;
 UA_Connection testingConnection;
 UA_ByteString sentData;
-
+UA_TcpErrorMessage errMsg;
 
 static funcs_called fCalled;
 static key_sizes keySizes;
+
+static void setup_sendError(void){
+    UA_TcpErrorMessage_init(&errMsg);
+}
+
+static void teardown_sendError(void){
+    memset(&errMsg, 0, sizeof(UA_TcpErrorMessage));
+}
 
 static void
 setup_secureChannel(void) {
@@ -165,16 +173,12 @@ START_TEST(SecureChannel_sendAsymmetricOPNMessage_SecurityModeInvalid) {
 END_TEST
 
 START_TEST(SecureChannel_sendError_BADSECURITYMODEREJECTED) {
-    UA_TcpErrorMessage errMsg;
-    UA_TcpErrorMessage_init(&errMsg);
     errMsg.error = UA_STATUSCODE_BADSECURITYMODEREJECTED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
 }
 END_TEST
 
 START_TEST(SecureChannel_sendError_BADCERTIFICATEREVOKED){
-    UA_TcpErrorMessage errMsg;
-    UA_TcpErrorMessage_init(&errMsg);
     errMsg.error = UA_STATUSCODE_BADCERTIFICATEREVOKED;
     UA_Connection_sendError(testChannel.connection, &errMsg);
 }
@@ -590,6 +594,7 @@ testSuite_SecureChannel(void) {
     tcase_add_test(tc_sendSymmetricMessage, SecureChannel_sendSymmetricMessage_modeNone);
 
     TCase *tc_sendError = tcase_create("Test sendError function");
+    tcase_add_checked_fixture(tc_sendError, setup_sendError, teardown_sendError);
     tcase_add_test(tc_sendError, SecureChannel_sendError_BADSECURITYMODEREJECTED);
     tcase_add_test(tc_sendError, SecureChannel_sendError_BADCERTIFICATEREVOKED);
 
